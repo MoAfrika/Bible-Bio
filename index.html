@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bible Bio - Interactive Bible Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #FDF6E3; /* Parchment */
+            --text-color: #2C3E50; /* Charcoal Blue */
+            --primary-color: #0D2C54; /* Deep Sapphire Blue */
+            --secondary-color: #B8860B; /* Dark Goldenrod */
+            --card-bg: rgba(253, 246, 227, 0.6); /* Translucent Parchment */
+            --card-border: rgba(184, 134, 11, 0.3);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%239C92AC' fill-opacity='0.05' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
+        }
+        
+        h1, h2, h3, h4 {
+            font-family: 'Lora', serif;
+        }
+
+        .main-container {
+            max-width: 1200px;
+        }
+        
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+
+        .featured-char-btn {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .featured-char-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0, 0.2);
+        }
+        .active-char-btn {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0,0,0, 0.3);
+            background-color: var(--primary-color);
+            color: white;
+            border: 2px solid var(--secondary-color);
+        }
+        
+        .content-fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 1000; opacity: 0; visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.visible { opacity: 1; visibility: visible; }
+        .modal-content {
+            background-color: var(--bg-color);
+            padding: 2rem; border-radius: 1rem;
+            max-width: 90%; width: 600px; max-height: 80vh;
+            overflow-y: auto; transform: scale(0.95);
+            transition: transform 0.3s ease;
+            border: 1px solid var(--secondary-color);
+        }
+        .modal-overlay.visible .modal-content { transform: scale(1); }
+        
+        .loader {
+            border: 4px solid rgba(13, 44, 84, 0.2); 
+            border-top: 4px solid var(--secondary-color);
+            border-radius: 50%; width: 40px; height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Custom Button Styles */
+        .btn-primary { background-color: var(--primary-color); color: white; }
+        .btn-primary:hover { background-color: #123c70; }
+        .btn-secondary { background-color: var(--secondary-color); color: white; }
+        .btn-secondary:hover { background-color: #d49d26; }
+        .btn-accent-1 { background-color: #800000; color: white; } /* Maroon */
+        .btn-accent-1:hover { background-color: #a00000; }
+        .btn-accent-2 { background-color: #004d40; color: white; } /* Dark Teal */
+        .btn-accent-2:hover { background-color: #00695c; }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="main-container mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-5xl sm:text-6xl font-bold text-gray-900 tracking-tight" style="color: var(--primary-color);">Bible Bio</h1>
+            <p class="mt-2 text-lg text-gray-700">Your Cinematic Guide to the Scriptures</p>
+        </header>
+
+        <section id="search-section" class="mb-8 p-6 glass-card rounded-2xl">
+            <div class="flex flex-col sm:flex-row gap-4 mb-4">
+                <input type="text" id="search-input" placeholder="Search for any character (e.g., Moses, Mary)..." class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-yellow-500 focus:border-yellow-500 transition">
+                <button id="search-btn" class="btn-primary font-bold py-3 px-6 rounded-lg transition-colors shadow-md">Search</button>
+            </div>
+            <div class="text-center">
+                <p class="text-sm text-gray-600 mb-2">Or select a featured character:</p>
+                <div id="featured-characters" class="flex justify-center gap-3 flex-wrap"></div>
+            </div>
+        </section>
+
+        <main id="main-content" class="bg-white rounded-2xl shadow-lg p-6 md:p-8 min-h-[400px] hidden" style="background-color: var(--card-bg);"></main>
+        
+        <section id="parable-section" class="mt-8 p-6 glass-card rounded-2xl">
+            <h2 class="text-3xl font-bold mb-4 text-gray-900 text-center" style="color: var(--primary-color);">Parable Visualizer</h2>
+            <p class="text-center text-gray-600 mb-4">Bring a parable to life with an explanation and an AI-generated illustration.</p>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <input type="text" id="parable-input" placeholder="e.g., 'The Prodigal Son' or 'The Good Samaritan'" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-teal-500 focus:border-teal-500 transition">
+                <button id="parable-btn" class="btn-accent-2 font-bold py-3 px-6 rounded-lg transition-colors shadow-md">✨ Explain & Visualize</button>
+            </div>
+        </section>
+        
+        <section id="devotional-section" class="mt-8 p-6 glass-card rounded-2xl">
+            <h2 class="text-3xl font-bold mb-4 text-gray-900 text-center" style="color: var(--primary-color);">Daily Devotional</h2>
+            <p class="text-center text-gray-600 mb-4">Generate a moment of reflection for any day.</p>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <input type="date" id="devotional-date-input" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-purple-500 focus:border-purple-500 transition">
+                <button id="devotional-btn" class="btn-accent-1 font-bold py-3 px-6 rounded-lg transition-colors shadow-md">✨ Generate Devotional</button>
+            </div>
+        </section>
+
+        <section id="explore-section" class="mt-8 p-6 glass-card rounded-2xl">
+            <h2 class="text-3xl font-bold mb-4 text-gray-900 text-center" style="color: var(--primary-color);">Explore the Bible</h2>
+            <p class="text-center text-gray-600 mb-4">Have a question about a parable, a historical event, or a theological concept? Ask away!</p>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <input type="text" id="explore-input" placeholder="e.g., 'What is the significance of the Jordan River?'" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-green-500 focus:border-green-500 transition">
+                <button id="explore-btn" class="btn-secondary font-bold py-3 px-6 rounded-lg transition-colors shadow-md">Ask Gemini</button>
+            </div>
+        </section>
+    </div>
+
+    <div id="modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modal-title" class="text-2xl font-bold" style="color: var(--primary-color);"></h3>
+                <button id="modal-close" class="text-gray-500 hover:text-gray-800 text-3xl">&times;</button>
+            </div>
+            <div id="modal-body" class="prose max-w-none"></div>
+        </div>
+    </div>
+    
+    <div id="loader-overlay" class="modal-overlay"><div class="loader"></div></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const featuredCharactersData = [
+                { "name": "David", "query": "David", "color": "#4682B4" },
+                { "name": "Esther", "query": "Esther", "color": "#5D3FD3" },
+                { "name": "Paul", "query": "Paul", "color": "#800000" }
+            ];
+
+            const searchInput = document.getElementById('search-input');
+            const searchBtn = document.getElementById('search-btn');
+            const featuredCharsContainer = document.getElementById('featured-characters');
+            const mainContent = document.getElementById('main-content');
+            const exploreInput = document.getElementById('explore-input');
+            const exploreBtn = document.getElementById('explore-btn');
+            const devotionalDateInput = document.getElementById('devotional-date-input');
+            const devotionalBtn = document.getElementById('devotional-btn');
+            const parableInput = document.getElementById('parable-input');
+            const parableBtn = document.getElementById('parable-btn');
+            const modal = document.getElementById('modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const modalClose = document.getElementById('modal-close');
+            const loaderOverlay = document.getElementById('loader-overlay');
+
+            let activeCharacterQuery = null;
+
+            async function callGemini(prompt) {
+                showLoader();
+                const apiKey = "AIzaSyCUv7wmGT-QpyU0LmptA_cc7R-fO_jW7aM";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
+
+                try {
+                    const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                    if (!response.ok) throw new Error(`API error: ${response.status} ${response.statusText}`);
+                    const result = await response.json();
+                    if (result.candidates && result.candidates.length > 0) {
+                        return result.candidates[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't generate a response.";
+                    }
+                    return "Sorry, the response was empty. Please try again.";
+                } catch (error) {
+                    console.error("Gemini API call failed:", error);
+                    return `An error occurred while contacting the AI: ${error.message}`;
+                } finally {
+                    hideLoader();
+                }
+            }
+
+            async function callImagenApi(prompt) {
+                // Note: This specific endpoint may require special access.
+                const apiKey = "AIzaSyCUv7wmGT-QpyU0LmptA_cc7R-fO_jW7aM";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`;
+                const payload = { instances: [{ prompt: prompt }], parameters: { "sampleCount": 1 } };
+
+                try {
+                    const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                    if (!response.ok) throw new Error(`API error: ${response.status} ${response.statusText}`);
+                    const result = await response.json();
+                    if (result.predictions && result.predictions[0]?.bytesBase64Encoded) {
+                        return `data:image/png;base64,${result.predictions[0].bytesBase64Encoded}`;
+                    }
+                    return null;
+                } catch (error) {
+                    console.error("Imagen API call failed:", error);
+                    return null;
+                }
+            }
+            
+            const showLoader = () => loaderOverlay.classList.add('visible');
+            const hideLoader = () => loaderOverlay.classList.remove('visible');
+            const showModal = (title, content) => {
+                modalTitle.textContent = title;
+                modalBody.innerHTML = content.replace(/\n/g, '<br>');
+                modal.classList.add('visible');
+                modalClose.focus(); // Accessibility improvement
+            };
+            const hideModal = () => modal.classList.remove('visible');
+            modalClose.addEventListener('click', hideModal);
+            modal.addEventListener('click', (e) => { if (e.target === modal) hideModal(); });
+
+            function renderFeaturedCharacters() {
+                featuredCharsContainer.innerHTML = featuredCharactersData.map(char => `<button data-char-query="${char.query}" class="featured-char-btn text-white font-bold py-2 px-5 rounded-full" style="background-color: ${char.color};">${char.name}</button>`).join('');
+                document.querySelectorAll('.featured-char-btn').forEach(btn => btn.addEventListener('click', () => {
+                    searchInput.value = btn.dataset.charQuery;
+                    handleSearch();
+                }));
+            }
+
+            async function handleSearch() {
+                const query = searchInput.value.trim();
+                if (!query) return;
+                activeCharacterQuery = query;
+                updateActiveButton();
+                const prompt = `Generate a concise biography of the biblical figure "${query}". Include their key life events, primary role, and a notable verse or quote. Format the output using simple HTML tags like <h2>, <h4>, <p>, and <ul>/<li>.`;
+                const characterBioHtml = await callGemini(prompt);
+                mainContent.classList.remove('hidden');
+                if (characterBioHtml && !characterBioHtml.toLowerCase().includes("sorry")) {
+                    renderCharacterProfile(query, characterBioHtml);
+                } else {
+                    mainContent.innerHTML = `<div class="text-center p-8"><h2 class="text-2xl font-bold">Character Not Found</h2><p class="text-gray-600 mt-2">We couldn't generate information for "${query}". Please try another name.</p></div>`;
+                }
+            }
+
+            function renderCharacterProfile(name, bioHtml) {
+                mainContent.innerHTML = `<div class="content-fade-in"><div id="character-image-container" class="mb-6 text-center"><div class="w-full aspect-square bg-gray-200 rounded-lg flex items-center justify-center animate-pulse" style="background-color: rgba(0,0,0,0.05)"><p class="text-gray-500">Click the button to generate a portrait.</p></div></div><button id="generate-image-btn" class="w-full btn-secondary font-bold py-3 px-4 rounded-lg transition-colors shadow-lg mb-6">🎨 Generate 3D Pixar-Style Portrait</button><div class="prose max-w-none">${bioHtml}</div><button id="deeper-dive-btn" class="not-prose w-full btn-primary font-bold py-3 px-4 rounded-lg transition-colors shadow-lg mt-6">✨ Get an Even Deeper Dive</button></div>`;
+                document.getElementById('generate-image-btn').addEventListener('click', () => handleImageGeneration(name));
+                document.getElementById('deeper-dive-btn').addEventListener('click', () => handleDeeperDive(name));
+            }
+
+            async function handleImageGeneration(name) {
+                const imageContainer = document.getElementById('character-image-container');
+                imageContainer.innerHTML = `<div class="w-full aspect-square rounded-lg flex items-center justify-center"><div class="loader"></div></div>`;
+                const prompt = `A cinematic, 3D Pixar-style portrait of the biblical figure ${name}. Expressive, colorful, and animated yet realistic, capturing their character as described in the scriptures. Focus on their face and upper body. The lighting should be warm and cinematic, with a shallow depth of field.`;
+                const imageUrl = await callImagenApi(prompt);
+                if (imageUrl) {
+                    imageContainer.innerHTML = `<img src="${imageUrl}" alt="AI-generated portrait of ${name}" class="w-full h-auto rounded-lg shadow-lg">`;
+                } else {
+                    imageContainer.innerHTML = `<div class="w-full aspect-square bg-gray-200 rounded-lg flex items-center justify-center p-4"><p class="text-red-500 text-center">Image generation failed. This can happen due to high demand or network issues. Please try again in a moment.</p></div>`;
+                }
+            }
+
+            async function handleDeeperDive(name) {
+                const prompt = `Provide a very detailed character analysis of the biblical figure ${name}. Go deeper into their historical context, key life events, relationships, personality traits, major accomplishments, failures, and theological significance. Make it engaging and easy to understand.`;
+                const insight = await callGemini(prompt);
+                showModal(`Deeper Dive on ${name}`, insight);
+            }
+            
+            function updateActiveButton() {
+                document.querySelectorAll('.featured-char-btn').forEach(btn => btn.classList.toggle('active-char-btn', btn.dataset.charQuery.toLowerCase() === activeCharacterQuery.toLowerCase()));
+            }
+
+            async function handleExploreQuery() {
+                const query = exploreInput.value.trim();
+                if (!query) return;
+                const prompt = `As an expert on the Bible, please provide a clear and comprehensive explanation for the following topic: "${query}". Explain any relevant historical context, key figures, and the theological meaning or moral lesson.`;
+                const response = await callGemini(prompt);
+                showModal(`Exploring: ${query}`, response);
+            }
+
+            async function handleDevotionalRequest() {
+                const dateValue = devotionalDateInput.value;
+                const date = new Date(dateValue);
+                const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                const prompt = `Generate a short, inspiring daily devotional for ${formattedDate}. It should include a relevant Bible verse (with its reference), a brief reflection on the verse's meaning and application to daily life, and a short prayer. The tone should be encouraging and uplifting. Format the output with <h4> tags for 'Verse', 'Reflection', and 'Prayer'.`;
+                const response = await callGemini(prompt);
+                showModal(`Devotional for ${formattedDate}`, response);
+            }
+
+            async function handleParableRequest() {
+                const query = parableInput.value.trim();
+                if (!query) return;
+                showLoader();
+                const textPrompt = `Please explain the parable of "${query}". Describe the story, the main characters, and its spiritual meaning or moral lesson. Format the output with <h4> tags for 'The Story' and 'The Meaning'.`;
+                const imagePrompt = `A beautiful, vibrant storybook illustration of a key scene from the parable of "${query}". The style should be warm, inviting, and slightly stylized, suitable for all ages. Cinematic lighting.`;
+                
+                const textResponsePromise = callGemini(textPrompt);
+                const imageUrlPromise = callImagenApi(imagePrompt);
+                
+                const [textResponse, imageUrl] = await Promise.all([textResponsePromise, imageUrlPromise]);
+                hideLoader();
+
+                let modalContent = '';
+                if (imageUrl) {
+                    modalContent += `<img src="${imageUrl}" alt="AI-generated illustration of ${query}" class="w-full h-auto rounded-lg shadow-lg mb-4">`;
+                } else {
+                     modalContent += `<p class="text-center text-red-500 mb-4">Could not generate an image for this parable at this time.</p>`;
+                }
+                modalContent += textResponse;
+
+                showModal(`The Parable of ${query}`, modalContent);
+            }
+
+            function init() {
+                // Set devotional date to today by default (cross-browser compatible)
+                devotionalDateInput.value = new Date().toISOString().split('T')[0];
+                
+                renderFeaturedCharacters();
+                searchBtn.addEventListener('click', handleSearch);
+                searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSearch(); });
+                exploreBtn.addEventListener('click', handleExploreQuery);
+                exploreInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleExploreQuery(); });
+                devotionalBtn.addEventListener('click', handleDevotionalRequest);
+                parableBtn.addEventListener('click', handleParableRequest);
+                parableInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleParableRequest(); });
+                
+                searchInput.value = "David";
+                handleSearch();
+            }
+
+            init();
+        });
+    </script>
+</body>
+</html>
