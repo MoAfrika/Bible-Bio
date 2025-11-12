@@ -334,11 +334,8 @@
             let activeCharacterQuery = null;
             let currentAudio = null; // Global variable to track playing audio
 
-            // --- API KEY - IMPORTANT ---
-            // The key in your file ("AIzaSy...") is likely invalid or a placeholder.
-            // You MUST replace "YOUR_OWN_GOOGLE_API_KEY_HERE" with your own valid API key 
-            // from Google AI Studio (https://aistudio.google.com/app/apikey).
-            const GOOGLE_API_KEY = "AIzaSyCMIEcMQFJ40TWkxofC9g98fhkDu9T5H4E"; 
+            // --- 
+            const GOOGLE_API_KEY = "API_KEY"; 
 
             const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${GOOGLE_API_KEY}`;
             const TTS_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${GOOGLE_API_KEY}`;
@@ -357,7 +354,7 @@
              */
             async function callGemini(prompt) {
                 if (!GOOGLE_API_KEY || GOOGLE_API_KEY === "YOUR_OWN_GOOGLE_API_KEY_HERE") {
-                    showModal("Configuration Error", "API Key is missing. Please paste your Google API Key into the script where it says 'YOUR_OWN_GOOGLE_API_KEY_HERE'.");
+                    showModal("Configuration Error", "API Key is missing. Please add your Google API Key to the script in index.html. For security, restrict your key to your website's domain in your Google Cloud console.");
                     return "API Key not configured.";
                 }
                 showLoader();
@@ -567,7 +564,7 @@
              */
             async function callGeminiTTS(text) {
                 if (!GOOGLE_API_KEY || GOOGLE_API_KEY === "YOUR_OWN_GOOGLE_API_KEY_HERE") {
-                    showModal("Configuration Error", "API Key is missing.");
+                    showModal("Configuration Error", "API Key is missing. Please add your Google API Key to the script in index.html.");
                     return null;
                 }
                 showLoader();
