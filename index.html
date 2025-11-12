@@ -9,15 +9,25 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Lora:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* Hootsuite-inspired Color Palette */
+        /* New Palette: https://coolors.co/palette/001219-005f73-0a9396-94d2bd-e9d8a6-ee9b00-ca6702-bb3e03-ae2012-9b2226 */
         :root {
-            --bg-color: #F8F9FA; /* Light Grey */
-            --text-color: #212529; /* Near Black */
-            --primary-color: #3B82F6; /* Vibrant Blue */
-            --secondary-color: #6C757D; /* Muted Grey */
+            --bg-color: #e9d8a6; /* Pale Yellow */
+            --text-color: #001219; /* Darkest Blue */
+            --primary-color: #005f73; /* Dark Teal */
+            --secondary-color: #0a9396; /* Lighter Teal */
+            --accent-color: #94d2bd; /* Pale Aqua */
+            
             --card-bg: rgba(255, 255, 255, 0.7); /* Translucent White */
-            --card-border: rgba(0, 0, 0, 0.1);
-            --pro-color: #DC2626; /* Strong Red for Pro features */
+            --card-border: rgba(0, 18, 25, 0.1); /* Faint dark blue border */
+            --pro-color: #9b2226; /* Dark Red */
+
+            --accent-orange-1: #ee9b00; /* Gold */
+            --accent-orange-2: #ca6702; /* Orange */
+            --accent-orange-3: #bb3e03; /* Darker Orange */
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
@@ -28,7 +38,7 @@
         
         h1, h2, h3, h4 {
             font-family: 'Lora', serif;
-            color: #1F2937; /* Darker Grey for Headers */
+            color: var(--text-color); /* Use darkest brown from palette */
         }
 
         .main-container {
@@ -55,7 +65,7 @@
             box-shadow: 0 8px 25px rgba(0,0,0, 0.3);
             background-color: var(--primary-color);
             color: white;
-            border: 2px solid #1E40AF; /* Darker Blue Border */
+            border: 2px solid var(--text-color); /* Darkest Blue Border */
         }
         
         .content-fade-in {
@@ -95,17 +105,24 @@
         /* Custom Button Styles */
         .btn { transition: all 0.2s ease; }
         .btn-primary { background-color: var(--primary-color); color: white; }
-        .btn-primary:hover { background-color: #2563EB; }
+        .btn-primary:hover { background-color: var(--secondary-color); } /* Lighter Teal */
         .btn-secondary { background-color: var(--secondary-color); color: white; }
-        .btn-secondary:hover { background-color: #5A6268; }
+        .btn-secondary:hover { background-color: var(--primary-color); } /* Dark Teal */
         .btn-pro { background-color: var(--pro-color); color: white; }
-        .btn-pro:hover { background-color: #B91C1C; }
-        .btn-accent-1, .btn-accent-2 {
-            background-color: #4B5563; /* Medium Grey */
+        .btn-pro:hover { background-color: #ae2012; } /* Slightly lighter red */
+        .btn-accent-1 {
+            background-color: var(--accent-orange-1); /* Gold */
+            color: var(--text-color);
+        }
+        .btn-accent-1:hover {
+            background-color: var(--accent-orange-2); /* Orange */
+        }
+        .btn-accent-2 {
+            background-color: var(--accent-orange-2); /* Orange */
             color: white;
         }
-        .btn-accent-1:hover, .btn-accent-2:hover {
-            background-color: #374151; /* Darker Grey */
+        .btn-accent-2:hover {
+            background-color: var(--accent-orange-3); /* Darker Orange */
         }
 
     </style>
@@ -115,101 +132,148 @@
     <div class="main-container mx-auto p-4 sm:p-6 lg:p-8">
         <header class="text-center mb-8">
             <h1 class="text-5xl sm:text-6xl font-bold tracking-tight">Bible Bio</h1>
-            <p class="mt-2 text-lg text-gray-600">Your Cinematic Guide to the Scriptures</p>
+            <p class="mt-2 text-lg text-blue-900/70">Your Cinematic Guide to the Scriptures</p>
         </header>
 
+        <!-- PRIMARY ACTION: Verse Lookup -->
+        <section id="verse-lookup-section" class="mb-8 p-6 glass-card rounded-2xl">
+            <h2 class="text-3xl font-bold mb-4 text-center">Quick Verse Lookup</h2>
+            <p class="text-center text-blue-900/70 mb-4">Get the text of any verse without the explanation.</p>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <input type="text" id="verse-lookup-input" placeholder="e.g., 'John 3:16' or 'Psalm 23'" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-primary-color focus:border-primary-color transition shadow-inner">
+                <button id="verse-lookup-btn" class="btn btn-primary font-bold py-3 px-6 rounded-lg shadow-md">Get Verse</button>
+            </div>
+        </section>
+
+        <!-- PRIMARY ACTION: Character Search -->
         <section id="search-section" class="mb-8 p-6 glass-card rounded-2xl">
+            <h2 class="text-3xl font-bold mb-4 text-center">Character Search</h2>
             <div class="flex flex-col sm:flex-row gap-4 mb-4">
-                <input type="text" id="search-input" placeholder="Search for any character (e.g., Moses, Mary)..." class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-blue-500 focus:border-blue-500 transition shadow-inner">
+                <input type="text" id="search-input" placeholder="Search for any character (e.g., Moses, Mary)..." class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-primary-color focus:border-primary-color transition shadow-inner">
                 <button id="search-btn" class="btn btn-primary font-bold py-3 px-6 rounded-lg shadow-md">Search</button>
             </div>
             <div class="text-center">
-                <p class="text-sm text-gray-600 mb-2">Or select a featured character:</p>
+                <p class="text-sm text-blue-900/70 mb-2">Or select a featured character:</p>
                 <div id="featured-characters" class="flex justify-center gap-3 flex-wrap"></div>
             </div>
         </section>
 
-        <main id="main-content" class="bg-white rounded-2xl shadow-lg p-6 md:p-8 min-h-[400px] hidden"></main>
+        <!-- MAIN CONTENT "STAGE" -->
+        <main id="main-content" class="bg-white rounded-2xl shadow-lg p-6 md:p-8 min-h-[300px] hidden mb-12"></main>
         
-        <section id="sermon-helper-section" class="mt-8 p-6 glass-card rounded-2xl">
-            <h2 class="text-3xl font-bold mb-4 text-center" style="color: var(--pro-color);">Sermon & Study Helper <span class="text-sm align-top">PRO</span></h2>
-            <p class="text-center text-gray-600 mb-4">Generate a complete outline for a sermon or Bible study on any topic or scripture.</p>
-            <div class="flex flex-col sm:flex-row gap-4">
-                <input type="text" id="sermon-input" placeholder="e.g., 'The concept of Grace' or 'John 3:16'" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-red-500 focus:border-red-500 transition shadow-inner">
-                <button id="sermon-btn" class="btn btn-pro font-bold py-3 px-6 rounded-lg shadow-md">🚀 Generate Outline</button>
-            </div>
+        <!-- SECONDARY ACTIONS: "Toolbox" -->
+        <section id="tools-section" class="mt-12">
+            <h2 class="text-4xl font-bold text-center mb-8">Bible Study Tools</h2>
+            
+            <div id="tools-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- Tool 1: Sermon Helper (PRO) -->
+                <div id="sermon-helper-card" class="glass-card rounded-2xl p-6 flex flex-col">
+                    <h2 class="text-2xl font-bold mb-4 text-center" style="color: var(--pro-color);">Sermon & Study Helper <span class="text-sm align-top">PRO</span></h2>
+                    <p class="text-center text-blue-900/70 mb-4 flex-grow">Generate a complete outline for a sermon or Bible study on any topic or scripture.</p>
+                    <div class="flex flex-col sm:flex-row gap-4 mt-auto">
+                        <input type="text" id="sermon-input" placeholder="e.g., 'The concept of Grace'" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-pro-color focus:border-pro-color transition shadow-inner">
+                        <button id="sermon-btn" class="btn btn-pro font-bold py-3 px-6 rounded-lg shadow-md">Generate</button>
+                    </div>
+                </div>
+
+                <!-- Tool 2: Parable Visualizer -->
+                <div id="parable-card" class="glass-card rounded-2xl p-6 flex flex-col">
+                    <h2 class="text-2xl font-bold mb-4 text-center">Parable Explainer</h2>
+                    <p class="text-center text-blue-900/70 mb-4 flex-grow">Bring a parable to life with a detailed explanation of its story and meaning.</p>
+                    <div class="flex flex-col sm:flex-row gap-4 mt-auto">
+                        <input type="text" id="parable-input" placeholder="e.g., 'The Prodigal Son'" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-accent-orange-3 focus:border-accent-orange-3 transition shadow-inner">
+                        <button id="parable-btn" class="btn btn-accent-2 font-bold py-3 px-6 rounded-lg shadow-md">Explain</button>
+                    </div>
+                </div>
+                
+                <!-- Tool 3: Daily Devotional (Modal) -->
+                <div id="devotional-card" class="glass-card rounded-2xl p-6 flex flex-col">
+                    <h2 class="text-2xl font-bold mb-4 text-center">Daily Devotional</h2>
+                    <p class="text-center text-blue-900/70 mb-4 flex-grow">Generate a moment of reflection with audio playback.</p>
+                    <div class="flex flex-col sm:flex-row gap-4 mt-auto">
+                        <input type="date" id="devotional-date-input" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-accent-orange-2 focus:border-accent-orange-2 transition shadow-inner">
+                        <button id="devotional-btn" class="btn btn-accent-1 font-bold py-3 px-6 rounded-lg shadow-md">Generate</button>
+                    </div>
+                </div>
+
+                <!-- Tool 4: Ask a Theologian -->
+                <div id="theologian-card" class="glass-card rounded-2xl p-6 flex flex-col">
+                    <h2 class="text-2xl font-bold mb-4 text-center">Ask a Theologian</h2>
+                    <p class="text-center text-blue-900/70 mb-4 flex-grow">Have a complex theological question? Get a clear, concise answer.</p>
+                    <div class="flex flex-col sm:flex-row gap-4 mt-auto">
+                        <input type="text" id="theologian-input" placeholder="e.g., 'Explain the Holy Trinity'" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-secondary-color focus:border-secondary-color transition shadow-inner">
+                        <button id="theologian-btn" class="btn btn-secondary font-bold py-3 px-6 rounded-lg shadow-md">Ask</button>
+                    </div>
+                </div>
+
+                <!-- Tool 5: Verse Explainer -->
+                <div id="verse-explainer-card" class="glass-card rounded-2xl p-6 flex flex-col">
+                    <h2 class="text-2xl font-bold mb-4 text-center">Verse Explainer</h2>
+                    <p class="text-center text-blue-900/70 mb-4 flex-grow">Get a detailed breakdown of any Bible verse, including context and meaning.</p>
+                    <div class="flex flex-col sm:flex-row gap-4 mt-auto">
+                        <input type="text" id="verse-input" placeholder="e.g., 'Romans 8:28'" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-primary-color focus:border-primary-color transition shadow-inner">
+                        <button id="verse-btn" class="btn btn-primary font-bold py-3 px-6 rounded-lg shadow-md">Explain</button>
+                    </div>
+                </div>
+
+                <!-- Tool 6: Prayer Generator -->
+                <div id="prayer-generator-card" class="glass-card rounded-2xl p-6 flex flex-col">
+                    <h2 class="text-2xl font-bold mb-4 text-center">Personalized Prayer</h2>
+                    <p class="text-center text-blue-900/70 mb-4 flex-grow">Need help finding the words? Generate a prayer for any situation or feeling.</p>
+                    <div class="flex flex-col sm:flex-row gap-4 mt-auto">
+                        <input type="text" id="prayer-input" placeholder="e.g., 'For strength'" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-accent-orange-2 focus:border-accent-orange-2 transition shadow-inner">
+                        <button id="prayer-btn" class="btn btn-accent-1 font-bold py-3 px-6 rounded-lg shadow-md">Generate</Gbutton>
+                    </div>
+                </div>
+
+                <!-- Tool 7: Character Dialogue -->
+                <div id="dialogue-card" class="glass-card rounded-2xl p-6 flex flex-col">
+                    <h2 class="text-2xl font-bold mb-4 text-center">Character Dialogue</h2>
+                    <p class="text-center text-blue-900/70 mb-4 flex-grow">Create a hypothetical conversation between two biblical figures.</p>
+                    <div class="flex flex-col gap-4 mt-auto">
+                        <input type="text" id="dialogue-char1-input" placeholder="Character 1 (e.g., Moses)" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-primary-color focus:border-primary-color transition shadow-inner">
+                        <input type="text" id="dialogue-char2-input" placeholder="Character 2 (e.g., Paul)" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-primary-color focus:border-primary-color transition shadow-inner">
+                        <button id="dialogue-btn" class="btn btn-primary w-full font-bold py-3 px-6 rounded-lg shadow-md">Create</button>
+                    </div>
+                </div>
+
+                <!-- Tool 8: Bible Quiz -->
+                <div id="quiz-card" class="glass-card rounded-2xl p-6 flex flex-col">
+                    <h2 class="text-2xl font-bold mb-4 text-center">Bible Quiz Generator</h2>
+                    <p class="text-center text-blue-900/70 mb-4 flex-grow">Test your knowledge on any topic from the Bible.</p>
+                    <div class="flex flex-col sm:flex-row gap-4 mt-auto">
+                        <input type="text" id="quiz-topic-input" placeholder="e.g., 'The Book of Genesis'" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-primary-color focus:border-primary-color transition shadow-inner">
+                        <button id="quiz-btn" class="btn btn-primary font-bold py-3 px-6 rounded-lg shadow-md">Generate</button>
+                    </div>
+                </div>
+
+                <!-- Tool 9: Book Summarizer -->
+                <div id="book-summary-card" class="glass-card rounded-2xl p-6 flex flex-col">
+                    <h2 class="text-2xl font-bold mb-4 text-center">Book Summarizer</h2>
+                    <p class="text-center text-blue-900/70 mb-4 flex-grow">Get a high-level summary of any book of the Bible.</p>
+                    <div class="flex flex-col sm:flex-row gap-4 mt-auto">
+                        <input type="text" id="book-input" placeholder="e.g., 'Genesis' or 'Revelation'" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-accent-orange-2 focus:border-accent-orange-2 transition shadow-inner">
+                        <button id="book-btn" class="btn btn-accent-1 font-bold py-3 px-6 rounded-lg shadow-md">Summarize</button>
+                    </div>
+                </div>
+                
+                <!-- Tool 10: Children's Storyteller (Modal) -->
+                <div id="storyteller-card" class="glass-card rounded-2xl p-6 flex flex-col">
+                    <h2 class="text-2xl font-bold mb-4 text-center">Children's Storyteller</h2>
+                    <p class="text-center text-blue-900/70 mb-4 flex-grow">Retell any Bible story in a simple, engaging way with audio.</p>
+                    <div class="flex flex-col sm:flex-row gap-4 mt-auto">
+                        <input type="text" id="story-input" placeholder="e.g., 'David and Goliath'" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-accent-orange-3 focus:border-accent-orange-3 transition shadow-inner">
+                        <button id="story-btn" class="btn btn-accent-2 font-bold py-3 px-6 rounded-lg shadow-md">Tell Story</button>
+                    </div>
+                </div>
+
+            </div> <!-- End of tools-grid -->
         </section>
 
-        <section id="parable-section" class="mt-8 p-6 glass-card rounded-2xl">
-            <h2 class="text-3xl font-bold mb-4 text-center">Parable Visualizer</h2>
-            <p class="text-center text-gray-600 mb-4">Bring a parable to life with an explanation and an AI-generated illustration.</p>
-            <div class="flex flex-col sm:flex-row gap-4">
-                <input type="text" id="parable-input" placeholder="e.g., 'The Prodigal Son' or 'The Good Samaritan'" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-gray-500 focus:border-gray-500 transition shadow-inner">
-                <button id="parable-btn" class="btn btn-accent-2 font-bold py-3 px-6 rounded-lg shadow-md">✨ Explain & Visualize</button>
-            </div>
-        </section>
-        
-        <section id="devotional-section" class="mt-8 p-6 glass-card rounded-2xl">
-            <h2 class="text-3xl font-bold mb-4 text-center">Daily Devotional</h2>
-            <p class="text-center text-gray-600 mb-4">Generate a moment of reflection for any day.</p>
-            <div class="flex flex-col sm:flex-row gap-4">
-                <input type="date" id="devotional-date-input" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-gray-500 focus:border-gray-500 transition shadow-inner">
-                <button id="devotional-btn" class="btn btn-accent-1 font-bold py-3 px-6 rounded-lg shadow-md">✨ Generate Devotional</button>
-            </div>
-        </section>
-
-        <section id="theologian-section" class="mt-8 p-6 glass-card rounded-2xl">
-            <h2 class="text-3xl font-bold mb-4 text-center">Ask a Theologian</h2>
-            <p class="text-center text-gray-600 mb-4">Have a complex theological question? Get a clear, concise answer.</p>
-            <div class="flex flex-col sm:flex-row gap-4">
-                <input type="text" id="theologian-input" placeholder="e.g., 'Explain the Holy Trinity' or 'What is theodicy?'" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-gray-500 focus:border-gray-500 transition shadow-inner">
-                <button id="theologian-btn" class="btn btn-secondary font-bold py-3 px-6 rounded-lg shadow-md">🤔 Ask Question</button>
-            </div>
-        </section>
-
-        <section id="verse-explainer-section" class="mt-8 p-6 glass-card rounded-2xl">
-            <h2 class="text-3xl font-bold mb-4 text-center">Verse Explainer</h2>
-            <p class="text-center text-gray-600 mb-4">Get a detailed breakdown of any Bible verse, including context and meaning.</p>
-            <div class="flex flex-col sm:flex-row gap-4">
-                <input type="text" id="verse-input" placeholder="e.g., 'Romans 8:28' or 'Genesis 1:1'" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-blue-500 focus:border-blue-500 transition shadow-inner">
-                <button id="verse-btn" class="btn btn-primary font-bold py-3 px-6 rounded-lg shadow-md">📖 Explain Verse</button>
-            </div>
-        </section>
-
-        <section id="prayer-generator-section" class="mt-8 p-6 glass-card rounded-2xl">
-            <h2 class="text-3xl font-bold mb-4 text-center">Personalized Prayer Generator</h2>
-            <p class="text-center text-gray-600 mb-4">Need help finding the words? Generate a prayer for any situation or feeling.</p>
-            <div class="flex flex-col sm:flex-row gap-4">
-                <input type="text" id="prayer-input" placeholder="e.g., 'For strength during a difficult time' or 'Gratitude for my family'" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-gray-500 focus:border-gray-500 transition shadow-inner">
-                <button id="prayer-btn" class="btn btn-accent-1 font-bold py-3 px-6 rounded-lg shadow-md">🙏 Generate Prayer</button>
-            </div>
-        </section>
-
-        <!-- NEW FEATURE: Character Dialogue -->
-        <section id="dialogue-section" class="mt-8 p-6 glass-card rounded-2xl">
-            <h2 class="text-3xl font-bold mb-4 text-center">Character Dialogue</h2>
-            <p class="text-center text-gray-600 mb-4">Create a hypothetical conversation between two biblical figures.</p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                <input type="text" id="dialogue-char1-input" placeholder="Character 1 (e.g., Moses)" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-blue-500 focus:border-blue-500 transition shadow-inner">
-                <input type="text" id="dialogue-char2-input" placeholder="Character 2 (e.g., Paul)" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-blue-500 focus:border-blue-500 transition shadow-inner">
-            </div>
-            <div class="flex">
-                <button id="dialogue-btn" class="btn btn-primary w-full font-bold py-3 px-6 rounded-lg shadow-md">🎭 Create Dialogue</button>
-            </div>
-        </section>
-
-        <!-- NEW FEATURE: Bible Quiz -->
-        <section id="quiz-section" class="mt-8 p-6 glass-card rounded-2xl">
-            <h2 class="text-3xl font-bold mb-4 text-center">Bible Quiz Generator</h2>
-            <p class="text-center text-gray-600 mb-4">Test your knowledge on any topic from the Bible.</p>
-            <div class="flex flex-col sm:flex-row gap-4">
-                <input type="text" id="quiz-topic-input" placeholder="e.g., 'The Book of Genesis' or 'The Life of David'" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:ring-blue-500 focus:border-blue-500 transition shadow-inner">
-                <button id="quiz-btn" class="btn btn-primary font-bold py-3 px-6 rounded-lg shadow-md">🧠 Generate Quiz</button>
-            </div>
-        </section>
     </div>
 
-    <!-- Modal for displaying deeper content -->
+    <!-- Modal for displaying deeper content & audio players -->
     <div id="modal" class="modal-overlay">
         <div class="modal-content">
             <div class="flex justify-between items-center mb-4">
@@ -226,9 +290,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const featuredCharactersData = [
-                { "name": "David", "query": "David", "color": "#3B82F6" }, // Blue
-                { "name": "Esther", "query": "Esther", "color": "#8B5CF6" }, // Purple
-                { "name": "Paul", "query": "Paul", "color": "#10B981" }  // Teal
+                { "name": "David", "query": "David", "color": "#005f73" }, // Dark Teal
+                { "name": "Esther", "query": "Esther", "color": "#0a9396" }, // Lighter Teal
+                { "name": "Paul", "query": "Paul", "color": "#94d2bd" }  // Pale Aqua
             ];
 
             // Element References
@@ -258,15 +322,33 @@
             const dialogueBtn = document.getElementById('dialogue-btn');
             const quizTopicInput = document.getElementById('quiz-topic-input');
             const quizBtn = document.getElementById('quiz-btn');
+            // New Element References
+            const bookInput = document.getElementById('book-input');
+            const bookBtn = document.getElementById('book-btn');
+            const storyInput = document.getElementById('story-input');
+            const storyBtn = document.getElementById('story-btn');
+            // New Verse Lookup References
+            const verseLookupInput = document.getElementById('verse-lookup-input');
+            const verseLookupBtn = document.getElementById('verse-lookup-btn');
 
             let activeCharacterQuery = null;
+            let currentAudio = null; // Global variable to track playing audio
 
-            // --- API KEY INSERTED ---
-            const GOOGLE_API_KEY = "AIzaSyCUv7wmGT-QpyU0LmptA_cc7R-fO_jW7aM"; 
+            // --- API KEY - IMPORTANT ---
+            // The key in your file ("AIzaSy...") is likely invalid or a placeholder.
+            // You MUST replace "YOUR_OWN_GOOGLE_API_KEY_HERE" with your own valid API key 
+            // from Google AI Studio (https://aistudio.google.com/app/apikey).
+            const GOOGLE_API_KEY = "AIzaSyCMIEcMQFJ40TWkxofC9g98fhkDu9T5H4E"; 
 
             const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${GOOGLE_API_KEY}`;
-            const IMAGEN_URL = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${GOOGLE_API_KEY}`;
+            const TTS_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${GOOGLE_API_KEY}`;
 
+
+            /**
+             * Helper function to pause execution.
+             * @param {number} ms - Milliseconds to wait.
+             */
+            const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
             /**
              * Calls the Gemini API directly from the browser.
@@ -274,30 +356,69 @@
              * @returns {Promise<string>} - The text response from the AI.
              */
             async function callGemini(prompt) {
-                if (!GOOGLE_API_KEY || GOOGLE_API_KEY === "YOUR_API_KEY_HERE") {
-                    showModal("Configuration Error", "API Key is missing. Please paste your Google API Key into the script.");
+                if (!GOOGLE_API_KEY || GOOGLE_API_KEY === "YOUR_OWN_GOOGLE_API_KEY_HERE") {
+                    showModal("Configuration Error", "API Key is missing. Please paste your Google API Key into the script where it says 'YOUR_OWN_GOOGLE_API_KEY_HERE'.");
                     return "API Key not configured.";
                 }
                 showLoader();
-                try {
-                    const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
-                    const response = await fetch(GEMINI_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (!response.ok) {
-                        const err = await response.json();
-                        throw new Error(err.error?.message || `API error: ${response.status}`);
+
+                const MAX_RETRIES = 3;
+                let delay = 1000; // Initial delay 1 second
+                let retries = 0;
+
+                const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
+
+                while (retries < MAX_RETRIES) {
+                    try {
+                        const response = await fetch(GEMINI_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if (!response.ok) {
+                            const err = await response.json();
+                            const errMsg = err.error?.message || `API error: ${response.status}`;
+                            
+                            // Check for overload error to retry
+                            if (errMsg.includes("overloaded") || errMsg.includes("try again later") || response.status === 429 || response.status === 503) {
+                                console.warn(`Gemini API overloaded. Retrying in ${delay / 1000}s...`);
+                                retries++;
+                                if (retries >= MAX_RETRIES) {
+                                    throw new Error(`The model is overloaded. Please try again later.`);
+                                }
+                                await sleep(delay);
+                                delay *= 2; // Exponential backoff
+                                continue; // Retry the loop
+                            }
+
+                            // Handle other errors immediately
+                            if (errMsg.includes("API key not valid")) {
+                                throw new Error("Your Google API Key is not valid. Please check the key and try again.");
+                            }
+                            if (errMsg.includes("API key not found")) {
+                                throw new Error("Your Google API Key was not found. Please ensure it is correct.");
+                            }
+                            throw new Error(errMsg);
+                        }
+                        
+                        const result = await response.json();
+                        hideLoader(); // Hide loader on success
+                        return result.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't generate a response.";
+                    
+                    } catch (error) {
+                        // If it's a non-API error (e.g., network failure) or a final retry failure
+                        if (!error.message.includes("overloaded") || retries >= MAX_RETRIES) {
+                            console.error("Gemini API call failed:", error);
+                            showModal("API Error", `An error occurred while contacting the Gemini API: ${error.message}`);
+                            hideLoader(); // Hide loader on final failure
+                            return `An error occurred: ${error.message}`;
+                        }
                     }
-                    const result = await response.json();
-                    return result.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't generate a response.";
-                } catch (error) {
-                    console.error("Gemini API call failed:", error);
-                    return `An error occurred: ${error.message}`;
-                } finally {
-                    hideLoader();
                 }
+                // This part should be unreachable, but as a fallback
+                hideLoader();
+                return "An unexpected error occurred after retries.";
             }
 
             /**
@@ -305,29 +426,222 @@
              * @param {string} prompt - The prompt for image generation.
              * @returns {Promise<string|null>} - The data URL of the generated image or null on failure.
              */
-            async function callImagenApi(prompt) {
-                 if (!GOOGLE_API_KEY || GOOGLE_API_KEY === "YOUR_API_KEY_HERE") {
+            // Removed callImagenApi function as the feature is being removed due to API restrictions.
+
+            // --- NEW: Audio Helper Functions ---
+
+            /**
+             * Decodes Base64 string to ArrayBuffer.
+             * @param {string} base64 - The base64 encoded string.
+             * @returns {ArrayBuffer}
+             */
+            function base64ToArrayBuffer(base64) {
+                const binaryString = window.atob(base64);
+                const len = binaryString.length;
+                const bytes = new Uint8Array(len);
+                for (let i = 0; i < len; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                return bytes.buffer;
+            }
+
+            /**
+             * Converts raw PCM audio data to a WAV file Blob.
+             * @param {Int16Array} pcmData - The raw PCM data.
+             * @param {number} sampleRate - The sample rate of the audio.
+             * @returns {Blob} - A Blob object representing the WAV file.
+             */
+            function pcmToWav(pcmData, sampleRate) {
+                const numChannels = 1;
+                const bitsPerSample = 16;
+                const byteRate = sampleRate * numChannels * (bitsPerSample / 8);
+                const blockAlign = numChannels * (bitsPerSample / 8);
+                const dataSize = pcmData.length * (bitsPerSample / 8);
+                const buffer = new ArrayBuffer(44 + dataSize);
+                const view = new DataView(buffer);
+
+                // RIFF header
+                view.setUint32(0, 0x52494646, false); // "RIFF"
+                view.setUint32(4, 36 + dataSize, true);
+                view.setUint32(8, 0x57415645, false); // "WAVE"
+                // "fmt " sub-chunk
+                view.setUint32(12, 0x666D7420, false); // "fmt "
+                view.setUint32(16, 16, true); // Sub-chunk size
+                view.setUint16(20, 1, true); // Audio format (1 = PCM)
+                view.setUint16(22, numChannels, true);
+                view.setUint32(24, sampleRate, true);
+                view.setUint32(28, byteRate, true);
+                view.setUint16(32, blockAlign, true);
+                view.setUint16(34, bitsPerSample, true);
+                // "data" sub-chunk
+                view.setUint32(36, 0x64617461, false); // "data"
+                view.setUint32(40, dataSize, true);
+
+                // Write the PCM data
+                const pcm16 = new Int16Array(buffer, 44);
+                pcm16.set(pcmData);
+
+                return new Blob([buffer], { type: 'audio/wav' });
+            }
+
+            /**
+             * Plays base64 encoded PCM audio.
+             * @param {string} base64Data - Base64 encoded audio data.
+             * @param {string} mimeType - The mimeType from the API (e.g., "audio/L16;rate=24000").
+             */
+            async function playAudio(base64Data, mimeType) {
+                try {
+                    // Stop any currently playing audio
+                    if (currentAudio) {
+                        currentAudio.pause();
+                        URL.revokeObjectURL(currentAudio.src);
+                        currentAudio = null;
+                    }
+
+                    const sampleRateMatch = mimeType.match(/rate=(\d+)/);
+                    if (!sampleRateMatch) {
+                        throw new Error("Could not parse sample rate from mimeType: " + mimeType);
+                    }
+                    const sampleRate = parseInt(sampleRateMatch[1], 10);
+                    const pcmData = base64ToArrayBuffer(base64Data);
+                    const pcm16 = new Int16Array(pcmData);
+                    const wavBlob = pcmToWav(pcm16, sampleRate);
+                    const audioUrl = URL.createObjectURL(wavBlob);
+                    
+                    const audio = new Audio(audioUrl);
+                    currentAudio = audio; // Assign to global
+                    await audio.play();
+                    
+                    // Clean up the URL object after playing
+                    audio.onended = () => {
+                        URL.revokeObjectURL(audioUrl);
+                        currentAudio = null; // Clear when finished
+                        
+                        // Reset button states on end
+                        const playDevotionalBtn = document.getElementById('play-devotional-btn');
+                        if (playDevotionalBtn) {
+                            playDevotionalBtn.textContent = 'Play Audio Devotional';
+                            playDevotionalBtn.disabled = false;
+                        }
+                        
+                        const playStoryBtn = document.getElementById('play-story-btn');
+                        if (playStoryBtn) {
+                            playStoryBtn.textContent = 'Listen to Story';
+                            playStoryBtn.disabled = false;
+                        }
+                    };
+                } catch (error) {
+                    console.error("Error playing audio:", error);
+                    showModal("Audio Error", "Could not play the generated audio.");
+                }
+            }
+
+            /**
+             * Stops any currently playing audio and cleans up.
+             */
+            function handleStopAudio() {
+                if (currentAudio) {
+                    currentAudio.pause();
+                    URL.revokeObjectURL(currentAudio.src);
+                    currentAudio = null;
+                    
+                    // Also reset button states
+                    const playDevotionalBtn = document.getElementById('play-devotional-btn');
+                    if (playDevotionalBtn) {
+                        playDevotionalBtn.textContent = 'Play Audio Devotional';
+                        playDevotionalBtn.disabled = false;
+                    }
+                    
+                    const playStoryBtn = document.getElementById('play-story-btn');
+                    if (playStoryBtn) {
+                        playStoryBtn.textContent = 'Listen to Story';
+                        playStoryBtn.disabled = false;
+                    }
+                }
+            }
+
+            /**
+             * Calls the Gemini TTS API.
+             * @param {string} text - The text to synthesize.
+             * @returns {Promise<{audioData: string, mimeType: string}|null>}
+             */
+            async function callGeminiTTS(text) {
+                if (!GOOGLE_API_KEY || GOOGLE_API_KEY === "YOUR_OWN_GOOGLE_API_KEY_HERE") {
+                    showModal("Configuration Error", "API Key is missing.");
                     return null;
                 }
-                try {
-                    const payload = { instances: [{ prompt }], parameters: { "sampleCount": 1 } };
-                    const response = await fetch(IMAGEN_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                     if (!response.ok) {
-                        const err = await response.json();
-                        throw new Error(err.error?.message || `API error: ${response.status}`);
+                showLoader();
+
+                const MAX_RETRIES = 3;
+                let delay = 1000;
+                let retries = 0;
+
+                const payload = {
+                    contents: [{
+                        parts: [{ text: `Say this in a clear, warm voice: ${text}` }]
+                    }],
+                    generationConfig: {
+                        responseModalities: ["AUDIO"],
+                        speechConfig: {
+                            voiceConfig: {
+                                prebuiltVoiceConfig: { voiceName: "Kore" } // A pleasant, firm voice
+                            }
+                        }
+                    },
+                    model: "gemini-2.5-flash-preview-tts"
+                };
+
+                while (retries < MAX_RETRIES) {
+                    try {
+                        const response = await fetch(TTS_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if (!response.ok) {
+                            const err = await response.json();
+                            const errMsg = err.error?.message || `API error: ${response.status}`;
+
+                            // Check for overload error to retry
+                            if (errMsg.includes("overloaded") || errMsg.includes("try again later") || response.status === 429 || response.status === 503) {
+                                console.warn(`TTS API overloaded. Retrying in ${delay / 1000}s...`);
+                                retries++;
+                                if (retries >= MAX_RETRIES) {
+                                    throw new Error(`The model is overloaded. Please try again later.`);
+                                }
+                                await sleep(delay);
+                                delay *= 2; // Exponential backoff
+                                continue; // Retry the loop
+                            }
+                            
+                            // Other errors
+                            throw new Error(errMsg);
+                        }
+
+                        const result = await response.json();
+                        const part = result?.candidates?.[0]?.content?.parts?.[0];
+                        const audioData = part?.inlineData?.data;
+                        const mimeType = part?.inlineData?.mimeType;
+
+                        if (audioData && mimeType && mimeType.startsWith("audio/")) {
+                            hideLoader(); // Hide on success
+                            return { audioData, mimeType };
+                        } else {
+                            throw new Error("Invalid TTS response from API.");
+                        }
+                    } catch (error) {
+                        if (!error.message.includes("overloaded") || retries >= MAX_RETRIES) {
+                            console.error("Gemini TTS API call failed:", error);
+                            showModal("API Error", `An error occurred while contacting the TTS API: ${error.message}`);
+                            hideLoader(); // Hide on final failure
+                            return null;
+                        }
                     }
-                    const result = await response.json();
-                    return result.predictions?.[0]?.bytesBase64Encoded
-                        ? `data:image/png;base64,${result.predictions[0].bytesBase64Encoded}`
-                        : null;
-                } catch (error) {
-                    console.error("Imagen API call failed:", error);
-                    throw error; 
                 }
+                // Fallback
+                hideLoader();
+                return null;
             }
             
             // --- UI Management ---
@@ -335,14 +649,29 @@
             const showLoader = () => loaderOverlay.classList.add('visible');
             const hideLoader = () => loaderOverlay.classList.remove('visible');
             
+            // This will scroll to the main content area after a result is generated
+            const showResult = (content, title) => {
+                const titleHtml = title ? `<h2 class="text-3xl font-bold mb-6 text-center">${title}</h2>` : '';
+                mainContent.innerHTML = `<div class="content-fade-in">${titleHtml}${content.replace(/\n/g, '<br>')}</div>`;
+                mainContent.classList.remove('hidden');
+                
+                // Scroll to the results
+                mainContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            };
+
             const showModal = (title, content) => {
                 modalTitle.textContent = title;
+                // Convert newlines to <br> tags for plain text display
                 modalBody.innerHTML = content.replace(/\n/g, '<br>');
+                
                 modal.classList.add('visible');
                 modalClose.focus();
             };
             
-            const hideModal = () => modal.classList.remove('visible');
+            const hideModal = () => {
+                handleStopAudio(); // Stop audio when modal is hidden
+                modal.classList.remove('visible');
+            };
             modalClose.addEventListener('click', hideModal);
             modal.addEventListener('click', (e) => { if (e.target === modal) hideModal(); });
             document.addEventListener('keydown', (e) => { if (e.key === "Escape") hideModal(); });
@@ -368,58 +697,35 @@
                 activeCharacterQuery = query;
                 updateActiveButton();
                 
-                const prompt = `Generate a concise biography of the biblical figure "${query}". Include their key life events, primary role, and a notable verse or quote. Format the output using simple, readable HTML (use <h4> for titles, <ul> for lists, <strong> for emphasis, and <em> for quotes).`;
-                const characterBioHtml = await callGemini(prompt);
+                const prompt = `Generate a concise biography of the biblical figure "${query}". Include their key life events, primary role, and a notable verse or quote. Format the output as plain text with clear headings and line breaks. Do not include HTML tags.`;
+                const characterBio = await callGemini(prompt);
                 
-                mainContent.classList.remove('hidden');
-                if (characterBioHtml && !characterBioHtml.toLowerCase().includes("sorry") && !characterBioHtml.toLowerCase().includes("api key")) {
-                    renderCharacterProfile(query, characterBioHtml);
+                if (characterBio && !characterBio.toLowerCase().includes("sorry") && !characterBio.toLowerCase().includes("api key") && !characterBio.toLowerCase().includes("an error occurred")) {
+                    renderCharacterProfile(query, characterBio);
                 } else {
-                    mainContent.innerHTML = `<div class="text-center p-8"><h2 class="text-2xl font-bold">Character Not Found</h2><p class="text-gray-600 mt-2">We couldn't generate information for "${query}". Please try another name.</p></div>`;
+                    showResult(`<div class="text-center p-8"><h2 class="text-2xl font-bold">Character Not Found</h2><p class="text-blue-900/70 mt-2">We couldn't generate information for "${query}". This might be due to an API error or an unrecognized name.</p></div>`);
                 }
             }
 
             function renderCharacterProfile(name, bioHtml) {
-                mainContent.innerHTML = `
-                    <div class="content-fade-in">
-                        <div id="character-image-container" class="mb-6 text-center">
-                            <div class="w-full aspect-square bg-gray-200 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-400">
-                                <button id="generate-image-btn" class="btn btn-secondary px-4 py-2 rounded shadow-lg">🎨 Generate Portrait (Subscription Required)</button>
-                            </div>
-                        </div>
-                        <div>${bioHtml}</div>
-                        <div class="mt-6 text-center">
-                            <button id="deeper-dive-btn" class="btn btn-primary px-6 py-2 rounded shadow-lg">🔎 Deeper Dive</button>
-                        </div>
+                const content = `
+                    <div>${bioHtml.replace(/\n/g, '<br>')}</div>
+                    <div class="mt-6 text-center">
+                        <button id="deeper-dive-btn" class="btn btn-primary px-6 py-2 rounded shadow-lg">Deeper Dive</button>
                     </div>`;
-                document.getElementById('generate-image-btn').addEventListener('click', () => handleImageGeneration(name));
+                showResult(content, `Biography of ${name}`);
+                
+                // Add event listener *after* rendering
                 document.getElementById('deeper-dive-btn').addEventListener('click', () => handleDeeperDive(name));
             }
 
-            async function handleImageGeneration(name) {
-                const imageContainer = document.getElementById('character-image-container');
-                imageContainer.innerHTML = `<div class="w-full aspect-square rounded-lg flex items-center justify-center"><div class="loader"></div></div>`;
-                
-                try {
-                    const prompt = `A cinematic, 3D Pixar-style portrait of the biblical figure ${name}. Expressive, colorful, and animated yet realistic, capturing their character as described in the scriptures.`;
-                    const imageUrl = await callImagenApi(prompt);
-                    
-                    if (imageUrl) {
-                        imageContainer.innerHTML = `<img src="${imageUrl}" alt="AI-generated portrait of ${name}" class="w-full h-auto rounded-lg shadow-lg">`;
-                    } else {
-                        throw new Error("API returned no image.");
-                    }
-                } catch (error) {
-                    console.error("Image generation failed:", error.message);
-                    let errorMessage = "This feature is only available to subscribed users.";
-                    imageContainer.innerHTML = `<div class="w-full aspect-square bg-gray-200 rounded-lg flex items-center justify-center p-4"><p class="text-red-500 text-center">${errorMessage}</p></div>`;
-                }
-            }
+            // Removed handleImageGeneration function as the feature is being removed.
 
             async function handleDeeperDive(name) {
-                const prompt = `Provide a very detailed character analysis of the biblical figure ${name}. Go deeper into their historical context, key life events, relationships, personality traits, and spiritual lessons. Format as readable HTML with <h4> and <p> tags.`;
+                const prompt = `Provide a very detailed character analysis of the biblical figure ${name}. Go deeper into their historical context, key life events, relationships, personality traits, and spiritual lessons. Format as plain text with paragraphs separated by newlines. Do not include HTML tags.`;
                 const insight = await callGemini(prompt);
-                showModal(`Deeper Dive on ${name}`, insight);
+                // Deeper dive *replaces* the content in the main stage
+                showResult(insight, `Deeper Dive on ${name}`);
             }
             
             function updateActiveButton() {
@@ -439,67 +745,129 @@
                 const adjustedDate = new Date(date.getTime() + timezoneOffset);
 
                 const formattedDate = adjustedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-                const prompt = `Generate a short, inspiring daily devotional for ${formattedDate}. It should include a relevant Bible verse (with its reference), a brief reflection on the verse's meaning, and a one-sentence prayer.`;
+                const prompt = `Generate a short, inspiring daily devotional for ${formattedDate}. It should include a relevant Bible verse (with its reference), a brief reflection on the verse's meaning, and a one-sentence prayer. Format as plain text, separating sections with a newline. Do not include HTML tags.`;
                 const response = await callGemini(prompt);
-                showModal(`Devotional for ${formattedDate}`, response);
+                
+                // --- NEW TTS FEATURE ---
+                // Get plain text from the HTML response for the TTS API
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = response;
+                const plainText = tempDiv.textContent || tempDiv.innerText || '';
+
+                const audioBtnHtml = `
+                    <div class="text-center mt-6 grid grid-cols-2 gap-4">
+                        <button id="play-devotional-btn" class="btn btn-secondary px-5 py-2 rounded-lg shadow-md">
+                            Play Audio Devotional
+                        </button>
+                        <button id="stop-audio-btn" class="btn btn-pro px-5 py-2 rounded-lg shadow-md">
+                            Stop Audio
+                        </button>
+                    </div>`;
+                
+                showModal(`Devotional for ${formattedDate}`, response + audioBtnHtml);
+
+                // Add event listener to the newly created button inside the modal
+                const playBtn = document.getElementById('play-devotional-btn');
+                if (playBtn) {
+                    playBtn.addEventListener('click', async () => {
+                        playBtn.textContent = 'Loading Audio...';
+                        playBtn.disabled = true;
+                        
+                        // UPDATED: Added date and clearer prompt for TTS
+                        const ttsPrompt = `Today is ${formattedDate}. Here is your devotional: ${plainText}`;
+                        const ttsResponse = await callGeminiTTS(ttsPrompt);
+                        
+                        if (ttsResponse) {
+                            await playAudio(ttsResponse.audioData, ttsResponse.mimeType);
+                        } else {
+                            // If TTS fails, re-enable button
+                            playBtn.textContent = 'Play Audio Devotional';
+                            playBtn.disabled = false;
+                        }
+                    });
+                }
+                const stopBtn = document.getElementById('stop-audio-btn');
+                if (stopBtn) {
+                    stopBtn.addEventListener('click', handleStopAudio);
+                }
             }
 
             async function handleParableRequest() {
                 const query = parableInput.value.trim();
                 if (!query) return;
                 
-                const textPrompt = `Please explain the parable of "${query}". Describe the story, the main characters, and its spiritual meaning or moral lesson. Format the output with <h4> tags for 'Story', 'Meaning', etc.`;
+                const textPrompt = `Please explain the parable of "${query}". Describe the story, the main characters, and its spiritual meaning or moral lesson. Format the output as plain text, with headings like 'Story:' and 'Meaning:' on their own lines. Do not use HTML tags.`;
                 const textResponse = await callGemini(textPrompt);
-
-                let modalContent = `<p class="text-center text-red-500 mb-4">Illustration is a premium feature only available to subscribed users.</p>`;
-                modalContent += textResponse;
-
-                showModal(`The Parable of ${query}`, modalContent);
+                
+                // UX CHANGE: Show result in main content area, not modal
+                showResult(textResponse, `The Parable of ${query}`);
             }
+
+            // --- NEW: Verse Lookup Handler ---
+            async function handleVerseLookupRequest() {
+                const query = verseLookupInput.value.trim();
+                if (!query) return;
+
+                const prompt = `Provide *only* the full text for the Bible verse[s] "${query}". Do not include any explanation, context, or any other text besides the verse itself and its reference. Format it as plain text, with the reference (e.g., "John 3:16") on the first line and the text on the next. Do not use HTML tags.`;
+                const verseHtml = await callGemini(prompt);
+                
+                if (verseHtml && !verseHtml.toLowerCase().includes("sorry") && !verseHtml.toLowerCase().includes("api key") && !verseHtml.toLowerCase().includes("an error occurred")) {
+                    // UX CHANGE: Show result in main content area
+                    showResult(verseHtml, `Verse Lookup`);
+                } else {
+                    showResult(`<div class="text-center p-8"><h2 class="text-2xl font-bold">Verse Not Found</h2><p class="text-blue-900/70 mt-2">We couldn't find the verse "${query}". Please check the reference and try again.</p></div>`);
+                }
+            }
+
 
             // --- NEW FEATURE HANDLERS ---
 
             async function handleSermonHelperRequest() {
                 const query = sermonInput.value.trim();
                 if (!query) return;
-                const prompt = `Act as an expert theologian and pastor. Generate a detailed sermon or Bible study outline for the topic: "${query}". The outline must be well-structured and formatted in HTML. Include the following sections with <h4> tags:
+                const prompt = `Act as an expert theologian and pastor. Generate a detailed sermon or Bible study outline for the topic: "${query}". The outline must be well-structured and formatted as plain text. Include the following sections, each starting on a new line:
                 1.  **Title:** A compelling title for the sermon/study.
                 2.  **Key Scripture:** The primary Bible passage(s) for this topic.
                 3.  **Introduction:** An engaging opening with a hook to capture attention.
-                4.  **Main Points:** At least three well-developed points, each with supporting scriptures and explanations. Use <ul> and <li> for sub-points.
+                4.  **Main Points:** At least three well-developed points, each with supporting scriptures and explanations. Use sub-points like '- Point A'.
                 5.  **Illustration/Application:** A real-life story or analogy to make the message relatable.
                 6.  **Conclusion:** A powerful summary and a call to action.
                 7.  **Discussion Questions:** Three thought-provoking questions for a small group study.`;
                 const response = await callGemini(prompt);
-                showModal(`Sermon Outline: ${query}`, response);
+                // UX CHANGE: Show result in main content area, not modal
+                showResult(response, `Sermon Outline: ${query}`);
             }
 
             async function handleTheologianRequest() {
                 const query = theologianInput.value.trim();
                 if (!query) return;
-                const prompt = `Act as a knowledgeable and clear theologian. Provide a comprehensive but easy-to-understand answer to the following question: "${query}". Break down complex concepts into simple terms. Use analogies if helpful. Provide key scriptural references to support your explanation. Format the response in simple HTML.`;
+                const prompt = `Act as a knowledgeable and clear theologian. Provide a comprehensive but easy-to-understand answer to the following question: "${query}". Break down complex concepts into simple terms. Use analogies if helpful. Provide key scriptural references to support your explanation. Format the response as plain text with paragraphs separated by newlines. Do not use HTML tags.`;
                 const response = await callGemini(prompt);
-                showModal(`Answer for: ${query}`, response);
+                // UX CHANGE: Show result in main content area, not modal
+                showResult(response, `Answer for: ${query}`);
             }
 
             async function handleVerseExplainerRequest() {
                 const query = verseInput.value.trim();
                 if (!query) return;
-                const prompt = `Act as a Bible scholar. Provide a detailed explanation of the verse "${query}". Structure your response in HTML with <h4> tags for each section:
+                const prompt = `Act as a Bible scholar. Provide a detailed explanation of the verse "${query}". Structure your response in 4 sections, each starting on a new line:
                 1.  **Context:** What is happening in the book/chapter around this verse?
                 2.  **Key Terms:** Identify and explain the meaning of important Greek or Hebrew words in the original language.
                 3.  **Theological Meaning:** What does this verse teach us about God, humanity, or salvation?
-                4.  **Practical Application:** How can someone apply the truth of this verse to their life today?`;
+                4.  **Practical Application:** How can someone apply the truth of this verse to their life today?
+                Do not use HTML tags.`;
                 const response = await callGemini(prompt);
-                showModal(`Explanation of ${query}`, response);
+                // UX CHANGE: Show result in main content area, not modal
+                showResult(response, `Explanation of ${query}`);
             }
 
             async function handlePrayerGeneratorRequest() {
                 const query = prayerInput.value.trim();
                 if (!query) return;
-                const prompt = `Write a heartfelt and personal prayer based on the following topic or need: "${query}". The prayer should be respectful, well-written, and about 3-4 sentences long.`;
+                const prompt = `Write a heartfelt and personal prayer based on the following topic or need: "${query}". The prayer should be respectful, well-written, and about 3-4 sentences long. Format as a single plain text paragraph. Do not use HTML tags.`;
                 const response = await callGemini(prompt);
-                showModal(`A Prayer for: ${query}`, response);
+                // UX CHANGE: Show result in main content area, not modal
+                showResult(response, `A Prayer for: ${query}`);
             }
 
             async function handleDialogueRequest() {
@@ -509,17 +877,85 @@
                     showModal("Input Required", "Please enter two biblical figures to start a dialogue.");
                     return;
                 }
-                const prompt = `Write a short, hypothetical dialogue between the biblical figures ${char1} and ${char2}. The conversation should be theologically sound, reflect their known personalities and historical contexts, and be formatted as a script (e.g., "${char1}: [dialogue]").`;
+                const prompt = `Write a short, hypothetical dialogue between the biblical figures ${char1} and ${char2}. The conversation should be theologically sound, reflect their known personalities and historical contexts, and be formatted as a plain text script (e.g., "${char1}: [dialogue]"). Do not use HTML tags.`;
                 const response = await callGemini(prompt);
-                showModal(`A Dialogue Between ${char1} and ${char2}`, response);
+                // UX CHANGE: Show result in main content area, not modal
+                showResult(response, `A Dialogue Between ${char1} and ${char2}`);
             }
 
             async function handleQuizRequest() {
                 const query = quizTopicInput.value.trim();
                 if (!query) return;
-                const prompt = `Generate a 5-question multiple-choice quiz about "${query}". Each question should have four options (A, B, C, D). At the end, provide a separate answer key. Format the entire output in simple, clean HTML. Use a <h4> for each question and a <ul>/<li> structure for the options. Use a final <h4> for the "Answer Key" section.`;
+                const prompt = `Generate a 5-question multiple-choice quiz about "${query}". Each question should have four options (A, B, C, D). At the end, provide a separate answer key. Format the entire output in simple, clean plain text. Use a new line for each question and option. Use a final heading for the "Answer Key" section. Do not use HTML tags.`;
                 const response = await callGemini(prompt);
-                showModal(`Quiz on: ${query}`, response);
+                // UX CHANGE: Show result in main content area, not modal
+                showResult(response, `Quiz on: ${query}`);
+            }
+
+            // --- NEW: Book Summarizer Handler ---
+            async function handleBookSummaryRequest() {
+                const query = bookInput.value.trim();
+                if (!query) return;
+                const prompt = `Act as a Bible scholar. Generate a concise summary of the biblical book of "${query}". Include the following sections, each starting on a new line:
+                1.  **Author & Date:** Who traditionally wrote it and when?
+                2.  **Main Theme:** What is the central message or theme?
+                3.  **Key Figures:** List the most important characters.
+                4.  **Brief Outline:** A few bullet points on its structure or key stories.
+                Do not use HTML tags.`;
+                const response = await callGemini(prompt);
+                // UX CHANGE: Show result in main content area, not modal
+                showResult(response, `Summary of ${query}`);
+            }
+
+            // --- NEW: Children's Storyteller Handler ---
+            async function handleStorytellerRequest() {
+                const query = storyInput.value.trim();
+                if (!query) return;
+                const prompt = `Retell the Bible story of "${query}" in simple, engaging language for a 5-year-old child. Use short sentences, vivid descriptions, and focus on the core moral or lesson of the story. Format as simple plain text with paragraphs separated by newlines. Do not use HTML tags.`;
+                const response = await callGemini(prompt);
+
+                // --- NEW TTS FEATURE ---
+                // Get plain text from the HTML response for the TTS API
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = response;
+                const plainText = tempDiv.textContent || tempDiv.innerText || '';
+
+                const audioBtnHtml = `
+                    <div class="text-center mt-6 grid grid-cols-2 gap-4">
+                        <button id="play-story-btn" class="btn btn-secondary px-5 py-2 rounded-lg shadow-md">
+                            Listen to Story
+                        </button>
+                        <button id="stop-audio-btn" class="btn btn-pro px-5 py-2 rounded-lg shadow-md">
+                            Stop Audio
+                        </button>
+                    </div>`;
+
+                showModal(`A Story About ${query}`, response + audioBtnHtml);
+
+                // Add event listener to the newly created button inside the modal
+                const playBtn = document.getElementById('play-story-btn');
+                if (playBtn) {
+                    playBtn.addEventListener('click', async () => {
+                        playBtn.textContent = 'Loading Audio...';
+                        playBtn.disabled = true;
+                        
+                        // UPDATED: Added a lead-in for the story
+                        const ttsPrompt = `Here is the story of ${query}: ${plainText}`;
+                        const ttsResponse = await callGeminiTTS(ttsPrompt);
+
+                        if (ttsResponse) {
+                            await playAudio(ttsResponse.audioData, ttsResponse.mimeType);
+                        } else {
+                            // If TTS fails, re-enable button
+                            playBtn.textContent = 'Listen to Story';
+                            playBtn.disabled = false;
+                        }
+                    });
+                }
+                const stopBtn = document.getElementById('stop-audio-btn');
+                if (stopBtn) {
+                    stopBtn.addEventListener('click', handleStopAudio);
+                }
             }
 
 
@@ -554,6 +990,16 @@
                 // New Event Listeners
                 dialogueBtn.addEventListener('click', handleDialogueRequest);
                 quizBtn.addEventListener('click', handleQuizRequest);
+
+                // New Verse Lookup Listener
+                verseLookupBtn.addEventListener('click', handleVerseLookupRequest);
+                verseLookupInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleVerseLookupRequest(); });
+
+                // New Feature Event Listeners
+                bookBtn.addEventListener('click', handleBookSummaryRequest);
+                bookInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleBookSummaryRequest(); });
+                storyBtn.addEventListener('click', handleStorytellerRequest);
+                storyInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleStorytellerRequest(); });
 
                 // Load a default character on startup to show content immediately
                 searchInput.value = "David";
